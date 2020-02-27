@@ -1,13 +1,6 @@
 from tkinter import *
 import random
-
-# Score and time left.
-# The boolean is used to check if text is correct.
-score = 0
-time_left = 0
-text_correct = False
-WPM = 0
-day = 0
+import time
 
 # Lists for speech
 mum_speech = ["Son, why didn't you do your homework?",
@@ -103,19 +96,25 @@ Good luck!
 random_text_choice = [easy_text_choice[random.randint(0, 15)], easy_text_choice[random.randint(0, 15)],
                       easy_text_choice[random.randint(0, 15)]]
 
+# Score and time left.
+# The boolean is used to check if text is correct.
+score = 0
+time_left = 60
+start_time = 0
+text_correct = False
+word_count = 0
+WPM = 0
+day = 0
 
-# When enter event is triggered, the game starts
 def start_game(event):
     global entry_field
     global main_screen
     global score
     global time_left
-    if time_left == 6000:
-        mum_speech_select()
-        countdown()
+    global start_time
 
     # When the game ends, resets everything.
-    if time_left == 0:
+    if time_left <= 0:
         global day
         main_screen.delete("all")
         main_screen.create_text(650, 300, fill="black", font=('Helvetica', 150), text="DAY {}".format(day+1))
@@ -127,6 +126,12 @@ def start_game(event):
         start_screen.pack()
         data_reset()
 
+    # When enter event is triggered, the game starts
+    if start_time == 0:
+        start_time = time.time()
+        mum_speech_select()
+        countdown()
+
 
 # The timer. Checks the entry field every second to see if requirements are met.
 def countdown():
@@ -135,9 +140,13 @@ def countdown():
     global text_correct
     global score
     global random_text_choice
+    global WPM
+    global word_count
     if time_left > 0:
-        time_left -= 1
-        timer.configure(text="Time left: " + str(time_left/100))
+        time_left = 60 + start_time - time.time()
+        WPM = word_count*60/(60-time_left)
+        wpm_label.configure(text="WPM: {}".format(round(WPM)))
+        timer.configure(text="Time left: " + str(abs(round(time_left,2))))
         text_correct = False
         option_screen.configure(text="1) " + random_text_choice[0] + "\n\n" +
                                      "2) " + random_text_choice[1] + "\n\n" +
@@ -182,7 +191,7 @@ def mum_speech_select():
 # Checks if you have answered the players mother correctly.
 def check_text(text):
     global text_correct
-    global WPM
+    global word_count
     if text == random_text_choice[0] or text == random_text_choice[1] or text == random_text_choice[2]:
         if day == 1:
                 random_text_choice[0] = easy_text_choice[random.randint(0, 15)]
@@ -200,10 +209,9 @@ def check_text(text):
                 random_text_choice[0] = nightmare_text_choice[random.randint(0, 15)]
                 random_text_choice[1] = nightmare_text_choice[random.randint(0, 15)]
                 random_text_choice[2] = nightmare_text_choice[random.randint(0, 15)]
+        word_count += len(entry_field.get())/5
         timer.after(0, print_correct)
         timer.after(300, delete_correct)
-        WPM += int(len(entry_field.get())/5)
-        wpm_label.configure(text="WPM: {}".format(WPM))
         entry_field.delete(0, END)
         text_correct = True
 
@@ -226,17 +234,19 @@ def end_game():
     main_screen.delete("all")
     main_screen.create_text(650, 300, fill="black", font="Times 100 bold", text="The game has ended.")
     main_screen.create_text(650, 400, fill="black", font="Times 20", text="Press enter to continue")
-    option_screen.configure(text="Final score: {}      WPM:{}".format(score, WPM))
+    option_screen.configure(text="Final score: {}      WPM:{}".format(score, round(WPM)))
 
 
 # Starts the game when 'Play' is pressed.
 def start_button_pressed():
     global time_left
+    global start_time
     global day
     start_screen.pack_forget()
     main_frame.pack()
     day += 1
-    time_left = 6000
+    start_time = 0
+    time_left = 60
 
 
 # Shows the instructions when 'How to Play' is pressed.
@@ -262,6 +272,7 @@ def data_reset():
     time_left = 0
     text_correct = False
     WPM = 0
+    start_time = 0
 
 
 # Ends the game when 'exit' is pressed.
@@ -287,11 +298,11 @@ score_display = Label(top_right_frame, width=15, height=3, text="Score: {}\n".fo
 score_display.grid(row=0, column=0)
 
 # WPM
-wpm_label = Label(top_right_frame, height=3, width=15, text="WPM: {}\n".format(str(score)), font=('Helvetica', 22))
+wpm_label = Label(top_right_frame, height=3, width=15, text="WPM: {}\n".format(str(WPM)), font=('Helvetica', 22))
 wpm_label.grid(row=1, column=0)
 
 # Timer
-timer = Label(top_right_frame, height=3, text="Time left: {}".format(str(time_left / 100)), font=('Helvetica', 22))
+timer = Label(top_right_frame, height=3, text="Time left: {}".format(str(time_left)), font=('Helvetica', 22))
 timer.grid(row=2, column=0, sticky="W")
 
 # Top left frame (Top left section)
