@@ -45,7 +45,7 @@ medium_text_choice = ["I beg for your mercy", "Let's resolve this peacefully",
                       "If there is a will there is a way", "Please calm down mum",
                       "Let's set aside our differences", "Let's sing a song",
                       "Video games are the meaning of life",
-                      "Let me live another day", "I need to go the the toilet",
+                      "Let me live another day", "I need to go to the toilet",
                       "We learn from our mistakes"]
 
 hard_text_choice = ["Bring it on mum! I'm ready to fight you.",
@@ -78,7 +78,7 @@ nightmare_text_choice = ["Do you really intend to kill me? Surely you don't want
                          "When I was 5 years old, I remember dropping an egg on the floor and getting beat up by mum.",
                          "Forgive me mother! I will do anything you ask! Anything!!!",
                          "Look over there! It's a bamboo shot!",
-                         "The truth is... I've always admired you since I ws young, mother...",
+                         "The truth is... I've always admired you since I was young, mother...",
                          "The organization is after us! We have to run.",
                          "I'm dead. I'm dead. I'm dead. I'm dead. I'm dead. I'm dead. I'm dead."]
 
