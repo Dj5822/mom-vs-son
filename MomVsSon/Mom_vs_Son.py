@@ -106,6 +106,7 @@ word_count = 0
 WPM = 0
 day = 0
 
+
 def start_game(event):
     global entry_field
     global main_screen
@@ -268,10 +269,13 @@ def data_reset():
     global time_left
     global text_correct
     global WPM
+    global word_count
+    global start_time
     score = 0
     time_left = 0
     text_correct = False
     WPM = 0
+    word_count = 0
     start_time = 0
 
 
